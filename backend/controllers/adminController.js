@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const Admin = require("../models/adminModel");
 const generateToken = require("../utils/index");
 
-
 const adminRegister = async (req, res) => {
   try {
     const { firstName, email, password } = req.body;
@@ -72,7 +71,7 @@ const adminLogin = async (req, res) => {
         secure: true,
       });
 
-      const { _id,firstName, email, role  } = admin;
+      const { _id, firstName, email, role } = admin;
 
       res.status(201).json({
         _id,
@@ -81,12 +80,12 @@ const adminLogin = async (req, res) => {
         role,
         token,
       });
-    } else { 
+    } else {
       res.status(500);
-      throw new Error("Something went wrong")
+      throw new Error("Something went wrong");
     }
   } catch (error) {
-    console.error(error.message)
+    console.error(error.message);
     res.status(500).send("Server error");
   }
 };
@@ -104,21 +103,24 @@ const getAdmin = async (req, res) => {
   try {
     const { adminId } = req.params;
 
-    const admin = await Admin.findById(adminId)
+    const admin = await Admin.findById(adminId);
 
     if (admin) {
       const { _id, firstName, email, role } = admin;
 
       res.status(200).json({
-        _id, firstName, email, role
-      })
+        _id,
+        firstName,
+        email,
+        role,
+      });
     } else {
       res.status(500);
-      throw new Error("Admin not found")
+      throw new Error("Admin not found");
     }
   } catch (error) {
-    console.error(error.message)
-    res.status(500).send("Server error")
+    console.error(error.message);
+    res.status(500).send("Server error");
   }
 };
 
@@ -127,7 +129,7 @@ const updateAdmin = async (req, res) => {
     const adminId = req.params.adminId;
 
     const admin = await Admin.findById(adminId);
-    
+
     if (!admin) {
       console.error(`User with ID ${adminId} not found`);
       return res.status(404).json({ error: "User not found" });
@@ -135,14 +137,14 @@ const updateAdmin = async (req, res) => {
 
     const { firstName, email, role } = req.body;
 
-    if (firstName) admin.firstName = firstName
-    if (email) admin.email = email
-    if (role) admin.role = role
-    
+    if (firstName) admin.firstName = firstName;
+    if (email) admin.email = email;
+    if (role) admin.role = role;
+
     const updatedAdminDetails = await admin.save();
-    res.json(updatedAdminDetails)
+    res.json(updatedAdminDetails);
   } catch (error) {
-    console.error("error updating message", error)
+    console.error("error updating message", error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -155,8 +157,8 @@ const logoutAdmin = async (req, res) => {
     sameSite: "none",
     secure: true,
   });
-  
-  res.status(201).json({message: "Admin logged out successfully"})
+
+  res.status(201).json({ message: "Admin logged out successfully" });
 };
 
 const deleteAdmin = async (req, res) => {
@@ -165,16 +167,23 @@ const deleteAdmin = async (req, res) => {
     const admin = await Admin.findById(adminId);
 
     if (!admin) {
-      res.status(404).json({ message: "Admin not found" })
+      res.status(404).json({ message: "Admin not found" });
     }
 
-    await admin.deleteOne()
-    res.status(200).json({ message: "Admin data deleted successful" })
-
+    await admin.deleteOne();
+    res.status(200).json({ message: "Admin data deleted successful" });
   } catch (error) {
-    console.error(error.message)
-    res.status(500).send("Server error")
+    console.error(error.message);
+    res.status(500).send("Server error");
   }
 };
 
-module.exports = { adminRegister, adminLogin, getAdmins, getAdmin, updateAdmin, logoutAdmin, deleteAdmin };
+module.exports = {
+  adminRegister,
+  adminLogin,
+  getAdmins,
+  getAdmin,
+  updateAdmin,
+  logoutAdmin,
+  deleteAdmin,
+};

@@ -1,13 +1,17 @@
 const express = require('express');
-const { processPayment} = require('../controllers/paymentController');
-const { protect } = require('../controllers/middleware/authMiddleware'); // Assuming you have middleware for authentication
+const { addPayment } = require("../controllers/stripeController");
+
 
 const router = express.Router();
 
-// Route to handle deposits
-router.post('/deposit', processPayment);
+// const secretKey = process.env.STRIPE_SECRET_KEY
 
-// Route to handle withdrawals
-router.post('/withdraw', protect, processWithdrawal);
+// Route to handle deposits
+router.post('/deposit', addPayment);
+
+
+
+
+
 
 module.exports = router;

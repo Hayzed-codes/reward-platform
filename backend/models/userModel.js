@@ -17,12 +17,21 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    balance: {
+      type: Number,
+      default: 0, // Initial balance is 0 when a user is created
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false, // Default is regular user, can set to true for admins
+    },
   },
   {
     timestamps: true,
   }
 );
 
+// Hash the password before saving the user model
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();

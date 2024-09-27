@@ -7,9 +7,10 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const connectDB = require("./config/DBconnect");
 const errorHandler = require("./middleware/errorMiddleware");
-const adminRoute = require("./routes/adminRoute")
-const userRoute = require("./routes/userRoute")
-const rewardRoute = require("./routes/rewardRoute")
+const adminRoute = require("./routes/adminRoute");
+const userRoute = require("./routes/userRoute");
+const rewardRoute = require("./routes/rewardRoute");
+const stripeRoute = require("./routes/stripeRoute");
 
 const PORT = process.env.PORT || 3500;
 
@@ -32,13 +33,35 @@ app.use(
   })
 );
 
+let totalRevenue = 0;
+
+app.get("/api/revenue", (req, res) => {
+  res.json({ totalRevenue });
+});
+
+setInterval(() => {
+  totalRevenue += Math.floor(Math.random() * 50); 
+}, 10000);
+
+app.get('/api/reach', (req, res) => {
+  const totalReach = 5000; 
+  res.json({ totalReach });
+});
+
+app.get('/api/media-value', (req, res) => {
+  const totalValue = 12000; 
+  res.json({ totalValue });
+});
+
+
 app.get("/", (req, res) => {
   res.send("We just starting");
 });
 
-app.use("/admin", adminRoute)
-app.use("/user", userRoute)
-app.use("/reward", rewardRoute)
+app.use("/admin", adminRoute);
+app.use("/user", userRoute);
+app.use("/reward", rewardRoute);
+app.use("/api", stripeRoute);
 
 connectDB();
 

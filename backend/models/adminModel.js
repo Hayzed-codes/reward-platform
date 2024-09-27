@@ -19,7 +19,14 @@ const adminSchema = new mongoose.Schema({
     role: {
         type: String,
         default: "admin"
-    }
+    },
+
+    user: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ]
 })
 
 adminSchema.pre("save", async function (next) {
